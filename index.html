@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EnergyOS — SaaS Inteligente</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+html { scroll-behavior:smooth; }
+body { background:#0B1120; }
+
+.fade-up {
+  opacity:0;
+  transform:translateY(30px);
+  transition:all .8s cubic-bezier(.16,1,.3,1);
+}
+.fade-up.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+.card-hover:hover {
+  transform:translateY(-6px);
+  transition:.3s ease;
+}
+</style>
+</head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<body class="text-white antialiased">
+
+<!-- LOGIN -->
+<div id="loginModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+  <div class="bg-[#111C33] p-10 rounded-xl w-96 space-y-6 shadow-lg fade-up show">
+    <h2 class="text-2xl font-semibold text-center">EnergyOS Login</h2>
+    <input type="text" id="username" placeholder="Usuário" class="w-full p-3 rounded bg-[#0B1120]/80 border border-white/20"/>
+    <input type="password" id="password" placeholder="Senha" class="w-full p-3 rounded bg-[#0B1120]/80 border border-white/20"/>
+    <button onclick="login()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-black py-3 rounded font-semibold transition">
+      Entrar
+    </button>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+<div class="app">
+  <aside class="sidebar">
+    <!-- menu -->
+  </aside>
+
+  <main class="main">
+    <nav class="navbar">
+      <button id="menuToggle" class="menu-btn">☰</button>
+    </nav>
+
+    <section class="cards">
+      <!-- dashboard cards -->
+    </section>
+  </main>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="fixed top-0 left-0 h-full w-64 bg-[#111C33] border-r border-white/10 p-6 flex flex-col gap-6">
+  <h1 class="text-xl font-semibold text-cyan-400">EnergyOS</h1>
+
+
+  <nav class="flex flex-col gap-4 mt-10">
+    <button id="menuToggle" class="menu-btn">☰</button>
+    <button onclick="showDashboard('overview')">Overview</button>
+    <button onclick="showDashboard('finance')">Financeiro</button>
+    <button onclick="showDashboard('alerts')">Alertas</button>
+    <button onclick="logout()" class="mt-auto text-red-400">Sair</button>
+  </nav>
+</aside>
+
+<main class="ml-64 p-10 space-y-10">
+
+<!-- FILTRO DE PERÍODO -->
+<div class="flex gap-4 mb-6">
+  <select id="periodFilter" onchange="applyFilter()" class="bg-[#111C33] border border-white/20 px-4 py-2 rounded">
+    <option value="6">Últimos 6 meses</option>
+    <option value="3">Últimos 3 meses</option>
+    <option value="12">Últimos 12 meses</option>
+  </select>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+<h2 class="text-3xl font-semibold mb-6">Executive Overview</h2>
+
+<div class="grid md:grid-cols-4 gap-6 mb-10">
+<div class="bg-[#0F172A] p-6 rounded-xl border border-white/10 card-hover">
+<div class="text-xs text-white/40">Consumo</div>
+<div id="totalConsumption" class="text-xl text-cyan-400 font-semibold">0 GWh</div>
+</div>
+<div class="bg-[#0F172A] p-6 rounded-xl border border-white/10 card-hover">
+<div class="text-xs text-white/40">Eficiência</div>
+<div id="efficiency" class="text-xl text-green-400 font-semibold">0%</div>
+</div>
+<div class="bg-[#0F172A] p-6 rounded-xl border border-white/10 card-hover">
+<div class="text-xs text-white/40">Custo</div>
+<div id="cost" class="text-xl text-red-400 font-semibold">R$0</div>
+</div>
+<div class="bg-[#0F172A] p-6 rounded-xl border border-white/10 card-hover">
+<div class="text-xs text-white/40">Alertas</div>
+<div id="alertsCount" class="text-xl text-yellow-400 font-semibold">0</div>
+</div>
+</div>
+
+<div class="bg-[#0F172A] p-6 rounded-xl border border-white/10">
+<canvas id="overviewChart"></canvas>
+</div>
+
+<div class="mt-6 bg-[#111C33] p-4 rounded-xl border border-cyan-500/30">
+<p id="aiInsight"></p>
+</div>
+</section>
+
+<!-- FINANCE -->
+<section id="finance" class="hidden">
+<h2 class="text-3xl font-semibold mb-6">Financeiro</h2>
+<div class="bg-[#0F172A] p-6 rounded-xl border border-white/10">
+<canvas id="financeChart"></canvas>
+</div>
+<div class="mt-6 bg-[#111C33] p-4 rounded-xl border border-green-500/30">
+<p id="financeProjection"></p>
+</div>
+</section>
+
+<!-- ALERTS -->
+<section id="alerts" class="hidden">
+<h2 class="text-3xl font-semibold mb-6">Alertas</h2>
+<ul id="alertsList" class="space-y-4"></ul>
+</section>
+
+</main>
+</div>
+<script>
+let overviewChart, financeChart;
+let realtimeInterval;
+
+let baseData=[80,82,85,88,90,93];
+let months=["Jan","Fev","Mar","Abr","Mai","Jun"];
+
+let financeData=[120000,130000,110000,140000,125000,150000];
+
+let mockAlerts=[
+{message:"Sobrecarga transformador"},
+{message:"Queda de tensão setor 3"}
+];
+
+function login(){
+const user=document.getElementById("username").value;
+const pass=document.getElementById("password").value;
+
+
+
+if(user==="admin" && pass==="admin123"){
+document.getElementById("loginModal").classList.add("hidden");
+document.getElementById("app").classList.remove("hidden");
+initCharts();
+loadAlerts();
+animateKPIs();
+startRealtime(); // 🔥 INICIA TEMPO REAL
+}
+}
+
+function logout(){
+clearInterval(realtimeInterval);
+location.reload();
+}
+
+function showDashboard(id){
+document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
+}
+
+function animateKPIs(){
+document.getElementById("totalConsumption").textContent="1.3 GWh";
+document.getElementById("efficiency").textContent="93%";
+document.getElementById("cost").textContent="R$480.000";
+}
+
+function initCharts(){
+
+overviewChart=new Chart(document.getElementById("overviewChart"),{
+type:"line",
+data:{
+labels:months,
+datasets:[{
+label:"Consumo",
+data:baseData,
+borderColor:"#00FFFF",
+backgroundColor:"rgba(0,255,255,0.1)",
+tension:.4,
+fill:true
+}]
+},
+options:{
+responsive:true,
+animation:{duration:800},
+plugins:{legend:{labels:{color:"white"}}},
+scales:{
+x:{ticks:{color:"white"}},
+y:{ticks:{color:"white"}}
+}
+}
+});
+
+financeChart=new Chart(document.getElementById("financeChart"),{
+type:"bar",
+data:{
+labels:months,
+datasets:[{
+data:financeData,
+backgroundColor:"#00FFFF80"
+}]
+},
+options:{
+responsive:true,
+animation:{duration:800},
+plugins:{legend:{display:false}},
+scales:{
+x:{ticks:{color:"white"}},
+y:{ticks:{color:"white"}}
+}
+}
+});
+
+updateAIInsight();
+generateProjection();
+}
+
+function startRealtime(){
+
+realtimeInterval=setInterval(()=>{
+
+// 🔥 Simula nova leitura de consumo
+let newConsumption=baseData[baseData.length-1] + (Math.random()*6-3);
+newConsumption=Math.round(newConsumption);
+
+baseData.push(newConsumption);
+baseData.shift();
+
+// 🔥 Simula financeiro
+let newFinance=financeData[financeData.length-1] + (Math.random()*20000-10000);
+newFinance=Math.round(newFinance);
+
+financeData.push(newFinance);
+financeData.shift();
+
+// Atualiza gráficos
+overviewChart.data.datasets[0].data=baseData;
+overviewChart.update();
+
+financeChart.data.datasets[0].data=financeData;
+financeChart.update();
+
+// Atualiza IA
+updateAIInsight();
+generateProjection();
+
+// Chance de novo alerta
+if(Math.random()>0.85){
+mockAlerts.push({message:"⚠ Oscilação detectada às "+new Date().toLocaleTimeString()});
+loadAlerts();
+}
+
+},5000); // ⏱ 5 segundos
+}
+
+function updateAIInsight(){
+const avg=baseData.reduce((a,b)=>a+b)/baseData.length;
+document.getElementById("aiInsight").textContent=
+avg>85?
+"📈 Consumo subindo em tempo real. IA recomenda auditoria preventiva."
+:"📉 Consumo estável. Sistema operando dentro do padrão ideal.";
+}
+
+function generateProjection(){
+const avg=financeData.reduce((a,b)=>a+b)/financeData.length;
+document.getElementById("financeProjection").textContent=
+"Projeção dinâmica próximo mês: R$ "+
+Math.round(avg*1.05).toLocaleString();
+}
+
+function applyFilter(){
+if(!overviewChart) return;
+
+const value=parseInt(document.getElementById("periodFilter").value);
+const safeValue=Math.min(value, baseData.length);
+
+overviewChart.data.labels=months.slice(-safeValue);
+overviewChart.data.datasets[0].data=baseData.slice(-safeValue);
+overviewChart.update();
+}
+
+function loadAlerts(){
+const list=document.getElementById("alertsList");
+list.innerHTML="";
+mockAlerts.forEach((a,i)=>{
+const li=document.createElement("li");
+li.className="bg-[#0F172A] p-4 rounded-xl flex justify-between";
+li.innerHTML=`${a.message}
+<button onclick="resolveAlert(${i})"
+class="bg-cyan-500 px-3 py-1 rounded text-black text-xs">Resolver</button>`;
+list.appendChild(li);
+});
+document.getElementById("alertsCount").textContent=mockAlerts.length;
+}
+
+function resolveAlert(i){
+mockAlerts.splice(i,1);
+loadAlerts();
+}
+</script>
+<div class="sidebar-overlay"></div>
+
+<script src="websocket.js"></script>
+
+</body>
+</html>

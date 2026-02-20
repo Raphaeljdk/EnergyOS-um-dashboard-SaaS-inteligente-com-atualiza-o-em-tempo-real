@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "version": "1.1.0",
+    "environment": "production",
+    "updatedAt": "2026-02-19T12:00:00Z",
+    "currency": "BRL",
+    "locale": "pt-BR",
+    "status": "operational"
+  },
+
+  "features": {
+    "enablePricing": true,
+    "enableCases": true,
+    "enableSimulator": true
+  },
+
+  "benefits": [
+    {
+      "id": "benefit_efficiency",
+      "slug": "eficiencia-energetica",
+      "title": "Eficiência energética avançada",
+      "description": "Redução comprovada de até 40% no consumo mensal.",
+      "category": "performance",
+      "order": 1,
+      "highlight": true,
+      "metrics": {
+        "maxReductionPercent": 40,
+        "averageReductionPercent": 28
+      },
+      "tags": ["economia", "energia", "performance"],
+      "active": true
+    },
+    {
+      "id": "benefit_operation",
+      "slug": "operacao-continua",
+      "title": "Operação contínua corporativa",
+      "description": "Arquitetura projetada para uso intensivo 24/7.",
+      "category": "reliability",
+      "order": 2,
+      "highlight": false,
+      "metrics": {
+        "uptimePercent": 99.2
+      },
+      "tags": ["infraestrutura", "disponibilidade"],
+      "active": true
+    },
+    {
+      "id": "benefit_control",
+      "slug": "controle-inteligente",
+      "title": "Controle inteligente em tempo real",
+      "description": "Monitoramento automatizado com ajustes preditivos.",
+      "category": "automation",
+      "order": 3,
+      "highlight": false,
+      "metrics": {
+        "responseTimeMs": 120
+      },
+      "tags": ["automacao", "monitoramento"],
+      "active": true
+    }
+  ],
+
+  "cases": [
+    {
+      "id": "case_alpha",
+      "slug": "empresa-alpha",
+      "company": {
+        "name": "Empresa Alpha",
+        "sector": "industrial",
+        "size": "medium"
+      },
+      "results": {
+        "reductionPercent": 32,
+        "paybackMonths": 16,
+        "timeToResultMonths": 4
+      },
+      "kpis": {
+        "monthlySavingsBRL": 38000,
+        "annualSavingsBRL": 456000
+      },
+      "order": 1,
+      "featured": true,
+      "active": true
+    },
+    {
+      "id": "case_beta",
+      "slug": "grupo-beta",
+      "company": {
+        "name": "Grupo Beta",
+        "sector": "corporate",
+        "size": "enterprise"
+      },
+      "results": {
+        "reductionPercent": 27,
+        "paybackMonths": 14,
+        "timeToResultMonths": 6
+      },
+      "kpis": {
+        "monthlySavingsBRL": 52000,
+        "annualSavingsBRL": 624000
+      },
+      "order": 2,
+      "featured": false,
+      "active": true
+    }
+  ],
+
+  "pricing": {
+    "plans": [
+      {
+        "id": "starter",
+        "name": "Starter",
+        "priceMonthly": 199,
+        "priceAnnual": 1990,
+        "trialDays": 7,
+        "features": [
+          "Simulador básico",
+          "Relatórios mensais",
+          "Suporte por email"
+        ],
+        "recommended": false
+      },
+      {
+        "id": "pro",
+        "name": "Pro",
+        "priceMonthly": 399,
+        "priceAnnual": 3990,
+        "trialDays": 14,
+        "features": [
+          "Simulador avançado",
+          "Relatórios em tempo real",
+          "Exportação de dados",
+          "Suporte prioritário"
+        ],
+        "recommended": true
+      }
+    ]
+  },
+
+  "analytics": {
+    "totalClients": 124,
+    "averageReductionPercent": 29,
+    "averagePaybackMonths": 15
+  }
+}

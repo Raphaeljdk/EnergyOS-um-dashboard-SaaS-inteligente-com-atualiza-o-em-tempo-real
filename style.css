@@ -1,0 +1,376 @@
+/* =====================================================
+   ENERGYOS — PREMIUM SaaS DESIGN SYSTEM
+===================================================== */
+
+/* ===============================
+   DESIGN TOKENS
+================================= */
+:root {
+  --bg: #0b0f1a;
+  --bg-soft: #0f172a;
+  --card: rgba(255,255,255,.04);
+  --card-strong: rgba(255,255,255,.07);
+  --border: rgba(255,255,255,.08);
+
+  --primary: #22c55e;
+  --primary-hover: #16a34a;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  --shadow-sm: 0 8px 20px rgba(0,0,0,.25);
+  --shadow-md: 0 20px 50px rgba(0,0,0,.35);
+  --shadow-glow: 0 0 80px rgba(34,197,94,.15);
+
+  --transition: all .4s cubic-bezier(.16,1,.3,1);
+}
+
+/* ===============================
+   RESET
+================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(34,197,94,.08), transparent 40%),
+    linear-gradient(135deg, #0b0f1a, #111827);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===============================
+   SCROLLBAR PREMIUM
+================================= */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.1);
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,.2);
+}
+
+/* ===============================
+   TOPBAR
+================================= */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 40px;
+  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,.03);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.topbar h1 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+
+/* ===============================
+   BUTTONS PREMIUM
+================================= */
+button {
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--primary);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(34,197,94,.3);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 25px 50px rgba(34,197,94,.4);
+}
+
+/* Ripple Glow */
+button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center,
+              rgba(255,255,255,.4),
+              transparent 70%);
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+button:hover::after {
+  opacity: .1;
+}
+
+/* ===============================
+   FILTER SELECT
+================================= */
+.filter select {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.filter select:hover {
+  border-color: var(--primary);
+}
+
+/* ===============================
+   DASHBOARD GRID
+================================= */
+.dashboard {
+  padding: 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+  gap: 28px;
+}
+
+/* ===============================
+   CARD PREMIUM
+================================= */
+.card {
+  background: var(--card);
+  backdrop-filter: blur(25px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255,255,255,.2);
+}
+
+/* KPI Glow Effect */
+.card.kpi:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+/* ===============================
+   AI BOX
+================================= */
+.ai-box {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg,#1e293b,#0f172a);
+  border: 1px solid rgba(34,197,94,.2);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(34,197,94,.1);
+}
+
+/* ===============================
+   ALERT SYSTEM
+================================= */
+.alert {
+  background: rgba(239,68,68,.15);
+  border: 1px solid rgba(239,68,68,.4);
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.alert:hover {
+  background: rgba(239,68,68,.25);
+}
+
+.alert button {
+  background: var(--danger);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  color: #fff;
+}
+
+.alert button:hover {
+  background: #dc2626;
+}
+
+/* ===============================
+   PREMIUM ANIMATIONS
+================================= */
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  filter: blur(10px);
+  transition: all 1s cubic-bezier(.16,1,.3,1);
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Floating Glow Background */
+.hero-glow {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(34,197,94,.25), transparent 70%);
+  filter: blur(140px);
+  top: -250px;
+  left: -250px;
+  animation: floatGlow 10s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes floatGlow {
+  from { transform: translate(0,0); }
+  to { transform: translate(80px,40px); }
+}
+
+/* ===============================
+   LOADING STATE
+================================= */
+html.is-loading {
+  cursor: progress;
+  opacity: .8;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg, #0f172a);
+  color: #fff;
+  overflow-x: hidden;
+}
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar padrão mobile */
+.sidebar {
+  position: fixed;
+  left: -260px;
+  top: 0;
+  width: 240px;
+  height: 100%;
+  background: #111827;
+  transition: 0.3s ease;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Sidebar ativa */
+.sidebar.active {
+  left: 0;
+}
+
+/* Conteúdo */
+.main {
+  flex: 1;
+  padding: 16px;
+  width: 100%;
+}
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+.cards {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #0f172a;
+}
+
+.nav-links {
+  display: none;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .menu-btn {
+    display: none;
+  }
+}
+h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+p {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+}
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+input,
+button,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+}
